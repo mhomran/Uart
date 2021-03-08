@@ -10,6 +10,7 @@
  ******************************************************************************/
 #include "uart.h"
 #include "circ_buffer.h"
+#include "uart_memmap.h"
 /******************************************************************************
 * Module Variable Definitions
  ******************************************************************************/
@@ -31,6 +32,15 @@ static CircBuff_t UartSendBuff[UART_MAX];
  * brief the UART receive buffers structures
  */
 static CircBuff_t UartReceiveBuff[UART_MAX];
+
+/**
+ * brief the UART data registers
+ */
+static volatile uint8_t* const UartDataRegs[UART_MAX] =
+{
+  //TODO: change uint8_t according to register size
+  (volatile uint8_t*) UDR
+};
 
 /******************************************************************************
  * Function Definitions
@@ -83,7 +93,25 @@ Uart_Init(const UartConfig_t * const Config)
 void 
 Uart_SendUpdate(void)
 {
-  //TODO
+  int8_t Result;
+  uint8_t Data;
+  uint8_t i;
+
+  for(i = 0; i < UART_MAX; i++)
+    {
+      Result = CircBuff_Dequeue(&UartSendBuff[i], &Data);
+      if(Result == 0)
+        {
+          //if(TransmitFlag)
+            {
+              *UartDataRegs[i] = Data;
+            }
+          //else
+            {
+              //TODO: implement your error handling method
+            }
+        }
+    }
 }
 
 /******************************************************************************
@@ -103,6 +131,22 @@ void
 Uart_ReceiveUpdate(void)
 {
   //TODO
+  int8_t Result;
+  uint8_t Data;
+  uint8_t i;
+
+  for(i = 0; i < UART_MAX; i++)
+    {
+      //if(RceiveFlag)
+        {
+          Data = *UartDataRegs[i];
+          Result = CircBuff_Enqueue(&UartReceiveBuff[i], Data);
+        }
+      //else
+        {
+          //TODO: implement your error handling method
+        }
+    }
 }
 
 /******************************************************************************

@@ -138,7 +138,7 @@ CircBuff_Reset(CircBuff_t* Buff)
 * @param Buff a valid pointer to the circuler buffer
 * @param Data a pointer to store the dequeued Data in.
 *
-* @return int8_t -1 if there's a valid Data returned, 0 otherwise
+* @return int8_t 0 if there's a valid Data returned, -1 otherwise
 *
 * \b Example:
 * @code
@@ -178,7 +178,7 @@ CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data)
 * @param Buff a valid pointer to the circuler buffer
 * @param Data a byte to add to the queue.
 *
-* @return int8_t -1 if there's a valid Data returned, 0 otherwise
+* @return int8_t 0 if the data enqueued, -1 otherwise
 *
 * \b Example:
 * @code
