@@ -9,15 +9,24 @@
 #define UART_H
 
 /******************************************************************************
+ * Includes
+ ******************************************************************************/
+#include <inttypes.h>
+#include "uart_cfg.h"
+/******************************************************************************
  * Function prototypes
  ******************************************************************************/
 #ifdef __cplusplus
 extern "C"{
 #endif
 
-void Uart_Init(const UartConfig_t * constConfig);
-void Uart_SendByte(Uart_t Uart, uint8_t data);
+void Uart_Init(const UartConfig_t * const Config);
+
+void Uart_SendByte(Uart_t Uart, uint8_t Data);
 uint8_t Uart_ReceiveByte(Uart_t Uart);
+
+uint8_t Uart_SendString(const uint8_t * const data, uint8_t DataSize);
+uint8_t Uart_ReceiveString(uint8_t * const data, uint8_t DataSize);
 
 #ifdef __cplusplus
 } // extern "C"
