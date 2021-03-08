@@ -24,7 +24,7 @@
 static const UartConfig_t UartConfig[] =
 {
   //TODO: configure your pins
-  { UART_0, UART_BAUDRATE_9600 }
+  { UART_0, UART_BAUDRATE_9600, UART_STOP_BIT_1, UART_PARTIY_NO }
 };
 /**********************************************************************
 * Function Definitions

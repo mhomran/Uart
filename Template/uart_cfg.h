@@ -38,21 +38,42 @@ typedef enum
 }UartBaudrate_t;
 
 /**
+ * Defines the possible stop bits 
+ */
+typedef enum 
+{
+  /* TODO: Populate this list based on possible stop bits */
+  UART_STOP_BIT_1,
+  UART_STOP_BIT_2,
+  UART_STOP_BIT_MAX,
+}UartStopBit_t;
+
+typedef enum
+{
+  /* TODO: Populate this list based on possible pairty options */
+  UART_PARTIY_NO, 
+  UART_PARTIY_EVEN, 
+  UART_PARTIY_ODD, 
+} UartParity_t;
+
+/**
 * Defines an enumerated list of all the uart pripherals on the MCU
 * device. The last element is used to specify the maximum number of
 * enumerated labels.
 */
 typedef enum
 {
-	/* TODO: Populate this list based on the MCU */
-	UART_0,
-	UART_MAX
+  /* TODO: Populate this list based on the MCU */
+  UART_0,
+  UART_MAX
 }Uart_t;
 
 typedef struct
 {
   Uart_t Uart; /**< the UART peripheral id */
   UartBaudrate_t Baudrate; /**< the UART baudrate */
+  UartStopBit_t StopBit; /**< the UART number of stop bits */
+  UartParity_t Parity; /**< the UART parity option */
 }UartConfig_t;
 
 /******************************************************************************
