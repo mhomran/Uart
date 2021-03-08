@@ -44,7 +44,8 @@ static CircBuff_t UartReceiveBuff[UART_MAX];
 * PRE-CONDITION: Configuration table needs to populated (sizeof > 0) <br>
 * PRE-CONDITION: The MCU clocks must be configured and enabled. <br>
 * PRE-CONDITION: The UART DIO pins are configured properly. <br>
-* POST-CONDITION: The Uart peripherals are set up with the configuration settings.<br>
+* POST-CONDITION: The Uart peripherals are set up with the configuration 
+* settings.<br>
 * @param Config is a pointer to the configuration table that
 * contains the initialization for the peripheral.
 * @return void
@@ -60,6 +61,11 @@ void
 Uart_Init(const UartConfig_t * const Config)
 {
   //TODO
+  for(uint8_t i = 0; i < UART_MAX; i++)
+    {
+      UartSendBuff[i] = CircBuff_Create(UartSendData[i], UART_BUFF_SIZE);
+      UartReceiveBuff[i] = CircBuff_Create(UartReceiveData[i], UART_BUFF_SIZE);
+    }
 }
 
 /******************************************************************************
