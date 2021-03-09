@@ -44,7 +44,7 @@ static uint8_t CircBuff_IsFull(CircBuff_t* Buff);
 uint8_t 
 CircBuff_IsFull(CircBuff_t* Buff)
 {
-	return ((Buff->Front + 1) % Buff->Size) == Buff->Rear;
+  return ((Buff->Front + 1) % Buff->Size) == Buff->Rear;
 }
 
 /*********************************************************************
@@ -62,8 +62,8 @@ CircBuff_IsFull(CircBuff_t* Buff)
 uint8_t 
 CircBuff_IsEmpty(CircBuff_t* Buf)
 {
-	// define empty as head == tail
-	return (Buf->Front == Buf->Rear);
+  // define empty as head == tail
+  return (Buf->Front == Buf->Rear);
 }
 
 /*********************************************************************
@@ -90,14 +90,13 @@ CircBuff_IsEmpty(CircBuff_t* Buf)
 **********************************************************************/
 CircBuff_t
 CircBuff_Create(uint8_t* BuffData, uint8_t Size) {
+  CircBuff_t Buff;
+  Buff.Data = BuffData;
+  Buff.Size = Size;
 
-	CircBuff_t Buff;
-	Buff.Data = BuffData;
-	Buff.Size = Size;
-	
-	CircBuff_Reset(&Buff);
+  CircBuff_Reset(&Buff);
 
-	return Buff;
+  return Buff;
 }
 
 /*********************************************************************
@@ -124,8 +123,8 @@ CircBuff_Create(uint8_t* BuffData, uint8_t Size) {
 void 
 CircBuff_Reset(CircBuff_t* Buff)
 {
-	Buff->Front = 0;
-	Buff->Rear = 0;
+  Buff->Front = 0;
+  Buff->Rear = 0;
 }
 
 /*********************************************************************
@@ -137,8 +136,8 @@ CircBuff_Reset(CircBuff_t* Buff)
 *
 * @param Buff a valid pointer to the circuler buffer
 * @param Data a pointer to store the dequeued Data in.
+* @return uint8_t 1 if there's a valid Data returned, 0 otherwise
 *
-* @return int8_t 0 if there's a valid Data returned, -1 otherwise
 *
 * \b Example:
 * @code
@@ -152,20 +151,20 @@ CircBuff_Reset(CircBuff_t* Buff)
 * @see CircBuff_Create
 * @see CircBuff_Enqueue
 **********************************************************************/
-int8_t 
+uint8_t 
 CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data)
 {
-	int8_t r = -1;
+  uint8_t r = 0;
 
-	if(Buff != NULL && Data != NULL && CircBuff_IsEmpty(Buff) != 1)
-		{
-			*Data = Buff->Data[Buff->Rear];
-			Buff->Rear = (Buff->Rear + 1) % Buff->Size;
+  if(Buff != NULL && Data != NULL && CircBuff_IsEmpty(Buff) != 1)
+    {
+      *Data = Buff->Data[Buff->Rear];
+      Buff->Rear = (Buff->Rear + 1) % Buff->Size;
 
-			r = 0;
-		}
+      r = 1;
+    }
 
-	return r;
+  return r;
 }
 
 /*********************************************************************
@@ -177,8 +176,7 @@ CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data)
 *
 * @param Buff a valid pointer to the circuler buffer
 * @param Data a byte to add to the queue.
-*
-* @return int8_t 0 if the data enqueued, -1 otherwise
+* @return uint8_t 1 if the byte is stored and 0 otherwise.
 *
 * \b Example:
 * @code
@@ -189,20 +187,20 @@ CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data)
 *
 * @see CircBuff_Create
 **********************************************************************/
-int8_t
+uint8_t
 CircBuff_Enqueue(CircBuff_t* Buff, uint8_t Data)
 {
-	int8_t r = -1;
+  uint8_t r = 0;
 
-	if(Buff != NULL && CircBuff_IsFull(Buff) != 1)
-		{
-			Buff->Data[Buff->Front] = Data;
-			Buff->Front = (Buff->Front + 1) % Buff->Size;
+  if(Buff != NULL && CircBuff_IsFull(Buff) != 1)
+    {
+      Buff->Data[Buff->Front] = Data;
+      Buff->Front = (Buff->Front + 1) % Buff->Size;
 
-			r = 0;
-		}
+      r = 1;
+    }
 
-	return r;
+  return r;
 }
 
 /************************End Of File ******************************/

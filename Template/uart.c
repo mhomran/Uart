@@ -93,14 +93,14 @@ Uart_Init(const UartConfig_t * const Config)
 void 
 Uart_SendUpdate(void)
 {
-  int8_t Result;
+  uint8_t Result;
   uint8_t Data;
   uint8_t i;
 
   for(i = 0; i < UART_MAX; i++)
     {
       Result = CircBuff_Dequeue(&UartSendBuff[i], &Data);
-      if(Result == 0)
+      if(Result == 1)
         {
           //if(TransmitFlag)
             {
@@ -131,7 +131,7 @@ void
 Uart_ReceiveUpdate(void)
 {
   //TODO
-  int8_t Result;
+  uint8_t Result;
   uint8_t Data;
   uint8_t i;
 
@@ -166,7 +166,8 @@ Uart_ReceiveUpdate(void)
 uint8_t 
 Uart_SendByte(const Uart_t Uart, const uint8_t Data)
 {
-  //TODO 
+  uint8_t res = CircBuff_Enqueue(&UartSendBuff[Uart], Data);
+  return res;
 }
 
 /******************************************************************************
@@ -185,7 +186,8 @@ Uart_SendByte(const Uart_t Uart, const uint8_t Data)
 uint8_t 
 Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data)
 {
-  //TODO
+  uint8_t res = CircBuff_Dequeue(&UartReceiveBuff[Uart], Data);
+  return res;
 }
 
 /******************************************************************************
