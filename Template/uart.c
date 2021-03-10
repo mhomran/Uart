@@ -211,7 +211,16 @@ Uart_SendString(
   const uint8_t * const Data,
   const uint8_t DataSize)
 {
-  //TODO
+  uint8_t res;
+  uint8_t i = 0;
+
+  do{
+    res = CircBuff_Enqueue(&UartSendBuff[Uart], Data[i]);
+
+    i = (res == 1) ? (i + 1) : i;
+  } while(res == 1 && i < DataSize);
+
+  return i;
 }
 
 /******************************************************************************
@@ -234,7 +243,16 @@ Uart_ReceiveString(
   uint8_t * const Data,
   const uint8_t DataSize)
 {
-  //TODO
+  uint8_t res;
+  uint8_t i = 0;
+
+  do{
+    res = CircBuff_Dequeue(&UartReceiveBuff[Uart], &Data[i]);
+
+    i = (res == 1) ? (i + 1) : i;
+  } while(res == 1 && i < DataSize);
+
+  return i;
 }
 
 /*****************************End of File ************************************/
