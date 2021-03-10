@@ -70,12 +70,12 @@ static volatile uint8_t* const UartDataRegs[UART_MAX] =
 void 
 Uart_Init(const UartConfig_t * const Config)
 {
-  //TODO
   for(uint8_t i = 0; i < UART_MAX; i++)
     {
       UartSendBuff[i] = CircBuff_Create(UartSendData[i], UART_BUFF_SIZE);
       UartReceiveBuff[i] = CircBuff_Create(UartReceiveData[i], UART_BUFF_SIZE);
     }
+  //TODO
 }
 
 /******************************************************************************
@@ -214,6 +214,12 @@ Uart_SendString(
   uint8_t res;
   uint8_t i = 0;
 
+  if(!(DataSize > 0 && Data != 0x00 && Uart < UART_MAX))
+    {
+      //TODO: implement your error handling method
+      return 0;
+    }
+
   do{
     res = CircBuff_Enqueue(&UartSendBuff[Uart], Data[i]);
 
@@ -245,6 +251,12 @@ Uart_ReceiveString(
 {
   uint8_t res;
   uint8_t i = 0;
+
+  if(!(DataSize > 0 && Data != 0x00 && Uart < UART_MAX))
+    {
+      //TODO: implement your error handling method
+      return 0;
+    }
 
   do{
     res = CircBuff_Dequeue(&UartReceiveBuff[Uart], &Data[i]);

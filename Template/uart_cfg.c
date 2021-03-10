@@ -23,7 +23,7 @@
 */
 static const UartConfig_t UartConfig[] =
 {
-  //TODO: configure your pins
+  //TODO: configure your UART peripherals
   { UART_0, UART_BAUDRATE_9600, UART_STOP_BIT_1, UART_PARTIY_NO }
 };
 /**********************************************************************
@@ -46,7 +46,7 @@ static const UartConfig_t UartConfig[] =
 * @see Uart_Init
 **********************************************************************/
 const UartConfig_t * 
-Uart_ConfigGet(void)
+Uart_GetConfig(void)
 {
   /*
   * The cast is performed to ensure that the address of the first element
