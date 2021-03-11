@@ -11,7 +11,11 @@
 /**********************************************************************
 * Preprocessor constants
 **********************************************************************/
+//TODO: choose the fine buffer size for your application
 #define UART_BUFF_SIZE 80 /**< define the number of bytes in a UART buffer */
+
+//TODO: choose a unique module ID
+#define UART_MODULE_ID 0x01 /**< define the module id to use in error handling */
 /**********************************************************************
 * Typedefs
 **********************************************************************/
@@ -50,7 +54,6 @@ typedef enum
 
 typedef enum
 {
-  /* TODO: Populate this list based on possible pairty options */
   UART_PARTIY_NO, 
   UART_PARTIY_EVEN, 
   UART_PARTIY_ODD, 

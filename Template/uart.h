@@ -9,6 +9,36 @@
 #define UART_H
 
 /******************************************************************************
+ * typedefs
+ ******************************************************************************/
+
+/**
+ * @brief A service id for error handling
+ */
+typedef enum
+{
+  UART_INIT_ID,
+  UART_SEND_UPDATE_ID,
+  UART_RECEIVE_UPDATE_ID,
+  UART_SEND_BYTE_ID,
+  UART_RECEIVE_BYTE_ID,
+  UART_SEND_STRING_ID,
+  UART_RECEIVE_STRING_ID
+} UartServiceId_t;
+
+/**
+ * @brief types of possible realtime errors 
+ */
+typedef enum
+{
+  UART_E_PARAM_POINTER, /**< A NULL pointer is passed to a function */
+  UART_E_FRAME, /**< The Uart frame is wrong */
+  UART_E_OVERRUN, /**< Overrun error (wasted received value) */
+  UART_E_PARITY, /**< parity error */
+  UART_E_TB_NEMPTY /**< transmit buffer not empty */
+} UartError_t;
+
+/******************************************************************************
  * Includes
  ******************************************************************************/
 #include <inttypes.h>
