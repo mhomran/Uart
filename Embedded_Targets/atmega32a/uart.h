@@ -20,7 +20,7 @@
 extern "C"{
 #endif
 
-void Uart_Init(const UartConfig_t * const Config);
+extern void Uart_Init(const UartConfig_t * const Config);
 
 extern void Uart_SendUpdate(void);
 extern void Uart_ReceiveUpdate(void);

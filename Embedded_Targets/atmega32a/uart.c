@@ -71,7 +71,7 @@ static volatile uint8_t* const UartDataRegs[UART_MAX] =
 * @endcode
 * @see Uart_ConfigGet
 *******************************************************************************/
-void 
+extern void 
 Uart_Init(const UartConfig_t * const Config)
 {
   for(uint8_t i = 0; i < UART_MAX; i++)
