@@ -124,7 +124,7 @@ Uart_Init(const UartConfig_t * const Config)
 *
 * @see Uart_Init
 *******************************************************************************/
-void 
+extern void
 Uart_SendUpdate(void)
 {
   uint8_t Result;
@@ -162,7 +162,7 @@ Uart_SendUpdate(void)
 *
 * @see Uart_Init
 *******************************************************************************/
-void 
+extern void
 Uart_ReceiveUpdate(void)
 {
   uint8_t Result;
@@ -199,7 +199,7 @@ Uart_ReceiveUpdate(void)
 * @see Uart_Init
 * @see Uart_SendUpdate
 *******************************************************************************/
-uint8_t 
+extern uint8_t
 Uart_SendByte(const Uart_t Uart, const uint8_t Data)
 {
   uint8_t res = CircBuff_Enqueue(&UartSendBuff[Uart], Data);
@@ -219,7 +219,7 @@ Uart_SendByte(const Uart_t Uart, const uint8_t Data)
 * @see Uart_Init
 * @see Uart_ReceiveUpdate
 *******************************************************************************/
-uint8_t 
+extern uint8_t
 Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data)
 {
   uint8_t res = CircBuff_Dequeue(&UartReceiveBuff[Uart], Data);
@@ -241,7 +241,7 @@ Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data)
 * @see Uart_Init
 * @see Uart_SendUpdate
 *******************************************************************************/
-uint8_t 
+extern uint8_t
 Uart_SendString(
   const Uart_t Uart,
   const uint8_t * const Data,
@@ -280,7 +280,7 @@ Uart_SendString(
 * @see Uart_Init
 * @see Uart_ReceiveUpdate
 *******************************************************************************/
-uint8_t 
+extern uint8_t
 Uart_ReceiveString(
   const Uart_t Uart, 
   uint8_t * const Data,

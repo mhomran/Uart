@@ -45,7 +45,7 @@ static const UartConfig_t UartConfig[] =
 * @endcode
 * @see Uart_Init
 **********************************************************************/
-const UartConfig_t * 
+extern const UartConfig_t * 
 Uart_GetConfig(void)
 {
   /*

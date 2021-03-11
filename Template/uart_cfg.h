@@ -83,7 +83,7 @@ typedef struct
 extern "C"{
 #endif
 
-const UartConfig_t* Uart_GetConfig(void);
+extern const UartConfig_t* Uart_GetConfig(void);
 
 #ifdef __cplusplus
 } // extern "C"

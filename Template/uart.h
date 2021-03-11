@@ -20,16 +20,16 @@
 extern "C"{
 #endif
 
-void Uart_Init(const UartConfig_t * const Config);
+extern void Uart_Init(const UartConfig_t * const Config);
 
-void Uart_SendUpdate(void);
-void Uart_ReceiveUpdate(void);
+extern void Uart_SendUpdate(void);
+extern void Uart_ReceiveUpdate(void);
 
-uint8_t Uart_SendByte(const Uart_t Uart, const uint8_t Data);
-uint8_t Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data);
+extern uint8_t Uart_SendByte(const Uart_t Uart, const uint8_t Data);
+extern uint8_t Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data);
 
-uint8_t Uart_SendString(const Uart_t Uart, const uint8_t * const Data, const uint8_t DataSize);
-uint8_t Uart_ReceiveString(const Uart_t Uart, uint8_t * const Data, const uint8_t DataSize);
+extern uint8_t Uart_SendString(const Uart_t Uart, const uint8_t * const Data, const uint8_t DataSize);
+extern uint8_t Uart_ReceiveString(const Uart_t Uart, uint8_t * const Data, const uint8_t DataSize);
 
 #ifdef __cplusplus
 } // extern "C"

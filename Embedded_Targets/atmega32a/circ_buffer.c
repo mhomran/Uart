@@ -88,7 +88,7 @@ CircBuff_IsEmpty(CircBuff_t* Buf)
 * @endcode
 *
 **********************************************************************/
-CircBuff_t
+extern CircBuff_t
 CircBuff_Create(uint8_t* BuffData, uint8_t Size) {
   CircBuff_t Buff;
   Buff.Data = BuffData;
@@ -120,7 +120,7 @@ CircBuff_Create(uint8_t* BuffData, uint8_t Size) {
 *
 * @see CircBuff_Create
 **********************************************************************/
-void 
+extern void
 CircBuff_Reset(CircBuff_t* Buff)
 {
   Buff->Front = 0;
@@ -151,7 +151,7 @@ CircBuff_Reset(CircBuff_t* Buff)
 * @see CircBuff_Create
 * @see CircBuff_Enqueue
 **********************************************************************/
-uint8_t 
+extern uint8_t
 CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data)
 {
   uint8_t r = 0;
@@ -187,7 +187,7 @@ CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data)
 *
 * @see CircBuff_Create
 **********************************************************************/
-uint8_t
+extern uint8_t
 CircBuff_Enqueue(CircBuff_t* Buff, uint8_t Data)
 {
   uint8_t r = 0;
