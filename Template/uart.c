@@ -11,6 +11,7 @@
 #include "uart.h"
 #include "circ_buffer.h"
 #include "uart_memmap.h"
+#include "det.h"
 /******************************************************************************
 * Module Variable Definitions
  ******************************************************************************/
@@ -70,12 +71,18 @@ static volatile uint8_t* const UartDataRegs[UART_MAX] =
 extern void 
 Uart_Init(const UartConfig_t * const Config)
 {
+  if(!(Config != 0x00))
+    {
+      Det_ReportError(UART_MODULE_ID, 0, UART_INIT_ID, UART_E_PARAM);
+      return;
+    }
+
   for(uint8_t i = 0; i < UART_MAX; i++)
     {
       UartSendBuff[i] = CircBuff_Create(UartSendData[i], UART_BUFF_SIZE);
       UartReceiveBuff[i] = CircBuff_Create(UartReceiveData[i], UART_BUFF_SIZE);
     }
-  //TODO
+  //TODO: implement Uart_Init
 }
 
 /******************************************************************************
@@ -102,13 +109,13 @@ Uart_SendUpdate(void)
       Result = CircBuff_Dequeue(&UartSendBuff[i], &Data);
       if(Result == 1)
         {
-          //if(TransmitFlag)
+          //if(TransmitBufferEmpty)
             {
               *UartDataRegs[i] = Data;
             }
           //else
             {
-              //TODO: implement your error handling method
+              Det_ReportError(UART_MODULE_ID, i, UART_SEND_UPDATE_ID, UART_E_TB_NEMPTY);
             }
         }
     }
@@ -131,7 +138,6 @@ extern void
 Uart_ReceiveUpdate(void)
 {
   //TODO
-  uint8_t Result;
   uint8_t Data;
   uint8_t i;
 
@@ -140,11 +146,22 @@ Uart_ReceiveUpdate(void)
       //if(RceiveFlag)
         {
           Data = *UartDataRegs[i];
-          Result = CircBuff_Enqueue(&UartReceiveBuff[i], Data);
+          CircBuff_Enqueue(&UartReceiveBuff[i], Data);
         }
-      //else
+
+      //if(frame error)
         {
-          //TODO: implement your error handling method
+          Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_FRAME);
+        }
+
+      //if(overrun error)
+        {
+          Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_OVERRUN);
+        }
+
+      //if(parity error)
+        {
+          Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_PARITY);
         }
     }
 }
@@ -166,6 +183,12 @@ Uart_ReceiveUpdate(void)
 extern uint8_t 
 Uart_SendByte(const Uart_t Uart, const uint8_t Data)
 {
+  if(!(Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_BYTE_ID, UART_E_PARAM);
+      return 0;
+    }
+
   uint8_t res = CircBuff_Enqueue(&UartSendBuff[Uart], Data);
   return res;
 }
@@ -186,6 +209,12 @@ Uart_SendByte(const Uart_t Uart, const uint8_t Data)
 extern uint8_t 
 Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data)
 {
+  if(!(Data != 0x00 && Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_BYTE_ID, UART_E_PARAM);
+      return 0;
+    }
+
   uint8_t res = CircBuff_Dequeue(&UartReceiveBuff[Uart], Data);
   return res;
 }
@@ -211,14 +240,16 @@ Uart_SendString(
   const uint8_t * const Data,
   const uint8_t DataSize)
 {
-  uint8_t res;
-  uint8_t i = 0;
-
-  if(!(DataSize > 0 && Data != 0x00 && Uart < UART_MAX))
+  if(!(Data != 0x00 && Uart < UART_MAX))
     {
-      //TODO: implement your error handling method
+      Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_STRING_ID, UART_E_PARAM);
       return 0;
     }
+
+  if(DataSize == 0) return 0;
+
+  uint8_t res;
+  uint8_t i = 0;
 
   do{
     res = CircBuff_Enqueue(&UartSendBuff[Uart], Data[i]);
@@ -249,14 +280,16 @@ Uart_ReceiveString(
   uint8_t * const Data,
   const uint8_t DataSize)
 {
-  uint8_t res;
-  uint8_t i = 0;
-
-  if(!(DataSize > 0 && Data != 0x00 && Uart < UART_MAX))
+  if(!(Data != 0x00 && Uart < UART_MAX))
     {
-      //TODO: implement your error handling method
+      Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_STRING_ID, UART_E_PARAM);
       return 0;
     }
+
+  if(DataSize == 0) return 0;
+
+  uint8_t res;
+  uint8_t i = 0;
 
   do{
     res = CircBuff_Dequeue(&UartReceiveBuff[Uart], &Data[i]);

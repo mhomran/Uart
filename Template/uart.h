@@ -31,7 +31,7 @@ typedef enum
  */
 typedef enum
 {
-  UART_E_PARAM_POINTER, /**< A NULL pointer is passed to a function */
+  UART_E_PARAM, /**< An invalid parameter passed to a function */
   UART_E_FRAME, /**< The Uart frame is wrong */
   UART_E_OVERRUN, /**< Overrun error (wasted received value) */
   UART_E_PARITY, /**< parity error */
