@@ -16,6 +16,9 @@
 * Preprocessor constants
 **********************************************************************/
 #define UART_BUFF_SIZE 80 /**< define the number of bytes in a UART buffer */
+
+#define UART_MODULE_ID 0x01 /**< define the module id to use in 
+error handling */
 /**********************************************************************
 * Typedefs
 **********************************************************************/
