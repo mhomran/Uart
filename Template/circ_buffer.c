@@ -203,4 +203,47 @@ CircBuff_Enqueue(CircBuff_t* Buff, uint8_t Data)
   return r;
 }
 
+/*********************************************************************
+* Function : CircBuff_PeekLast()
+*//**
+* \b Description:
+*
+* This function is used to peak the tail of a circuler buffer
+*
+* @param Buff a valid pointer to the circuler buffer
+* @param Data a pointer to store the peeked byte in.
+* @return uint8_t 1 if the byte is stored and 0 otherwise.
+*
+* \b Example:
+* @code
+* uint8_t UartBuffer[MAX_UART_BUFF_SIZE];
+* CircBuff_t UartBuff = CircBuff_Create(UartBuffer, MAX_UART_BUFF_SIZE);
+* CircBuff_Enqueue(&UartBuff, 'a'); // now the buffer has 'a'
+* uint8_t x;
+* CircBuff_PeekLast(&UartBuff, &x);
+* @endcode
+*
+* @see CircBuff_PeekLast
+**********************************************************************/
+extern uint8_t 
+CircBuff_PeekLast(CircBuff_t* Buff, uint8_t * Data)
+{
+  uint8_t r = 0;
+
+  if(Buff != NULL && Data != NULL && CircBuff_IsEmpty(Buff) != 1)
+    {
+      //just read the rear
+      uint8_t toPeekOn;
+
+      if(Buff->Front == 0) toPeekOn = Buff->Size - 1;
+      else toPeekOn = Buff->Front - 1;
+
+      *Data = Buff->Data[toPeekOn];
+
+      r = 1;
+    }
+
+  return r;
+}
+
 /************************End Of File ******************************/

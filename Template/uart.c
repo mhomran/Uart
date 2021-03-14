@@ -300,4 +300,31 @@ Uart_ReceiveString(
   return i;
 }
 
+
+/******************************************************************************
+* Function : Uart_PeekLastByte()
+*//**
+* \b Description:
+* This function is used to peak the last received byte from the UART 
+* receive data buffers.
+* PRE-CONDITION: Uart_Init called properly <br>
+* @param Uart the Uart Id 
+* @param Data a pointer to store the received byte
+* @return uint8_t 1 if the byte is received and 0 otherwise.
+*
+* @see Uart_Init
+*******************************************************************************/
+extern uint8_t 
+Uart_PeekLastByte(const Uart_t Uart, uint8_t* const Data)
+{
+  if(!(Data != 0x00 && Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_PEEK_LAST_BYTE_ID, UART_E_PARAM);
+      return 0;
+    }
+
+  uint8_t res = CircBuff_PeekLast(&UartReceiveBuff[Uart], Data);
+  return res;
+}
+
 /*****************************End of File ************************************/

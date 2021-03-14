@@ -37,6 +37,7 @@ extern CircBuff_t CircBuff_Create(uint8_t* BuffData, uint8_t Size);
 extern void CircBuff_Reset(CircBuff_t* Buff);
 extern uint8_t CircBuff_Dequeue(CircBuff_t* Buff, uint8_t * Data);
 extern uint8_t CircBuff_Enqueue(CircBuff_t* Buff, uint8_t Data);
+extern uint8_t CircBuff_PeekLast(CircBuff_t* Buff, uint8_t * Data);
 
 #endif /* end CIRC_BUFFER_H */
 /************************End Of File ******************************/
