@@ -93,6 +93,7 @@ Uart_Init(const UartConfig_t * const Config)
 * data buffers. <br>
 * PRE-CONDITION: Uart_Init called properly <br>
 * POST-CONDITION: The next byte (if existed) in the UART data buffers is sent <br>
+* @param Uart the Uart Id 
 * @return void
 *
 * @see Uart_Init
