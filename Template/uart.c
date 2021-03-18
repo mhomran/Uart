@@ -98,25 +98,27 @@ Uart_Init(const UartConfig_t * const Config)
 * @see Uart_Init
 *******************************************************************************/
 extern void 
-Uart_SendUpdate(void)
+Uart_SendUpdate(const Uart_t Uart)
 {
+  if(!(Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_UPDATE_ID, UART_E_PARAM);
+      return;
+    }
+    
   uint8_t Result;
   uint8_t Data;
-  uint8_t i;
-
-  for(i = 0; i < UART_MAX; i++)
+  
+  Result = CircBuff_Dequeue(&UartSendBuff[Uart], &Data);
+  if(Result == 1)
     {
-      Result = CircBuff_Dequeue(&UartSendBuff[i], &Data);
-      if(Result == 1)
+      //if(TransmitBufferEmpty)
         {
-          //if(TransmitBufferEmpty)
-            {
-              *UartDataRegs[i] = Data;
-            }
-          //else
-            {
-              Det_ReportError(UART_MODULE_ID, i, UART_SEND_UPDATE_ID, UART_E_TB_NEMPTY);
-            }
+          *UartDataRegs[Uart] = Data;
+        }
+      //else
+        {
+          Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_UPDATE_ID, UART_E_TB_NEMPTY);
         }
     }
 }
@@ -130,39 +132,42 @@ Uart_SendUpdate(void)
 * PRE-CONDITION: Uart_Init called properly <br>
 * POST-CONDITION: The next byte (if existed) in the UART data registers is 
 * received <br>
+* @param Uart the Uart Id 
 * @return void
 *
 * @see Uart_Init
 *******************************************************************************/
 extern void 
-Uart_ReceiveUpdate(void)
+Uart_ReceiveUpdate(const Uart_t Uart)
 {
+  if(!(Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_PARAM);
+      return;
+    }
+
   //TODO
   uint8_t Data;
-  uint8_t i;
 
-  for(i = 0; i < UART_MAX; i++)
+  //if(RceiveFlag)
     {
-      //if(RceiveFlag)
-        {
-          Data = *UartDataRegs[i];
-          CircBuff_Enqueue(&UartReceiveBuff[i], Data);
-        }
+      Data = *UartDataRegs[Uart];
+      CircBuff_Enqueue(&UartReceiveBuff[Uart], Data);
+    }
 
-      //if(frame error)
-        {
-          Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_FRAME);
-        }
+  //if(frame error)
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_FRAME);
+    }
 
-      //if(overrun error)
-        {
-          Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_OVERRUN);
-        }
+  //if(overrun error)
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_OVERRUN);
+    }
 
-      //if(parity error)
-        {
-          Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_PARITY);
-        }
+  //if(parity error)
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_PARITY);
     }
 }
 
