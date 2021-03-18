@@ -127,33 +127,37 @@ Uart_Init(const UartConfig_t * const Config)
 * data buffers. <br>
 * PRE-CONDITION: Uart_Init called properly <br>
 * POST-CONDITION: The next byte (if existed) in the UART data buffers is sent <br>
+* @param Uart the Uart Id 
 * @return void
 *
 * @see Uart_Init
 *******************************************************************************/
 extern void
-Uart_SendUpdate(void)
+Uart_SendUpdate(const Uart_t Uart)
 {
+  if(!(Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_UPDATE_ID, UART_E_PARAM);
+      return;
+    }
+
   uint8_t Result;
   uint8_t Data;
-  uint8_t i;
-
-  for(i = 0; i < UART_MAX; i++)
+  
+  Result = CircBuff_Dequeue(&UartSendBuff[Uart], &Data);
+  if(Result == 1)
     {
-      Result = CircBuff_Dequeue(&UartSendBuff[i], &Data);
-      if(Result == 1)
+      //Transmit buffer empty ?
+      if(*UCSRA & (1<<UDRE))
         {
-          //Transmit buffer empty ?
-          if(*UCSRA & (1<<UDRE))
-            {
-              *UartDataRegs[i] = Data;
-            }
-          else
-            {
-              Det_ReportError(UART_MODULE_ID, i, UART_SEND_UPDATE_ID, UART_E_TB_NEMPTY);
-            }
+          *UartDataRegs[Uart] = Data;
+        }
+      else
+        {
+          Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_UPDATE_ID, UART_E_TB_NEMPTY);
         }
     }
+
 }
 
 /******************************************************************************
@@ -165,55 +169,57 @@ Uart_SendUpdate(void)
 * PRE-CONDITION: Uart_Init called properly <br>
 * POST-CONDITION: The next byte (if existed) in the UART data registers is 
 * received <br>
+* @param Uart the Uart Id 
 * @return void
 *
 * @see Uart_Init
 *******************************************************************************/
 extern void
-Uart_ReceiveUpdate(void)
+Uart_ReceiveUpdate(const Uart_t Uart)
 {
-  uint8_t Result;
-  uint8_t Data;
-  uint8_t i;
-  uint8_t error = 0;
-
-  for(i = 0; i < UART_MAX; i++)
+  if(!(Uart < UART_MAX))
     {
-      //received something ?
-      if(*UCSRA & (1 << RXC))
-        {
-          //error bits are valid until the receive buffer (UDR) is read
-          if(*UCSRA & (1 << FE))
-            {
-              Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_FRAME);
-              error = 1;
-            }
-
-          if(*UCSRA & (1 << DOR))
-            {
-              Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_OVERRUN);
-              error = 1;              
-            }
-
-          if(*UCSRA & (1 << PE))
-            {
-              Det_ReportError(UART_MODULE_ID, i, UART_RECEIVE_UPDATE_ID, UART_E_PARITY);
-              error = 1;
-            }
-
-          if(error == 0)
-            {
-              Data = *UartDataRegs[i];
-              Result = CircBuff_Enqueue(&UartReceiveBuff[i], Data);
-            }
-          else
-            {
-              //clear RXC flag
-              Data = *UartDataRegs[i];
-            }
-        }
+      Det_ReportError(UART_MODULE_ID, Uart, UART_SEND_UPDATE_ID, UART_E_PARAM);
+      return;
     }
 
+  uint8_t Result;
+  uint8_t Data;
+  uint8_t error = 0;
+
+  //received something ?
+  if(*UCSRA & (1 << RXC))
+    {
+      //error bits are valid until the receive buffer (UDR) is read
+      if(*UCSRA & (1 << FE))
+        {
+          Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_FRAME);
+          error = 1;
+        }
+
+      if(*UCSRA & (1 << DOR))
+        {
+          Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_OVERRUN);
+          error = 1;              
+        }
+
+      if(*UCSRA & (1 << PE))
+        {
+          Det_ReportError(UART_MODULE_ID, Uart, UART_RECEIVE_UPDATE_ID, UART_E_PARITY);
+          error = 1;
+        }
+
+      if(error == 0)
+        {
+          Data = *UartDataRegs[Uart];
+          Result = CircBuff_Enqueue(&UartReceiveBuff[Uart], Data);
+        }
+      else
+        {
+          //clear RXC flag
+          Data = *UartDataRegs[Uart];
+        }
+    }
 }
 
 /******************************************************************************
@@ -350,6 +356,32 @@ Uart_ReceiveString(
   } while(res == 1 && i < DataSize);
 
   return i;
+}
+
+/******************************************************************************
+* Function : Uart_PeekLastByte()
+*//**
+* \b Description:
+* This function is used to peak the last received byte from the UART 
+* receive data buffers.
+* PRE-CONDITION: Uart_Init called properly <br>
+* @param Uart the Uart Id 
+* @param Data a pointer to store the received byte
+* @return uint8_t 1 if the byte is received and 0 otherwise.
+*
+* @see Uart_Init
+*******************************************************************************/
+extern uint8_t 
+Uart_PeekLastByte(const Uart_t Uart, uint8_t* const Data)
+{
+  if(!(Data != 0x00 && Uart < UART_MAX))
+    {
+      Det_ReportError(UART_MODULE_ID, Uart, UART_PEEK_LAST_BYTE_ID, UART_E_PARAM);
+      return 0;
+    }
+
+  uint8_t res = CircBuff_PeekLast(&UartReceiveBuff[Uart], Data);
+  return res;
 }
 
 /*****************************End of File ************************************/

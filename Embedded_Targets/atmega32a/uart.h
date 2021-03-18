@@ -9,13 +9,9 @@
 #define UART_H
 
 /******************************************************************************
- * Includes
- ******************************************************************************/
-#include <inttypes.h>
-#include "uart_cfg.h"
-/******************************************************************************
  * typedefs
  ******************************************************************************/
+
 /**
  * @brief A service id for error handling
  */
@@ -27,7 +23,8 @@ typedef enum
   UART_SEND_BYTE_ID,
   UART_RECEIVE_BYTE_ID,
   UART_SEND_STRING_ID,
-  UART_RECEIVE_STRING_ID
+  UART_RECEIVE_STRING_ID,
+  UART_PEEK_LAST_BYTE_ID
 } UartServiceId_t;
 
 /**
@@ -43,6 +40,11 @@ typedef enum
 } UartError_t;
 
 /******************************************************************************
+ * Includes
+ ******************************************************************************/
+#include <inttypes.h>
+#include "uart_cfg.h"
+/******************************************************************************
  * Function prototypes
  ******************************************************************************/
 #ifdef __cplusplus
@@ -51,11 +53,12 @@ extern "C"{
 
 extern void Uart_Init(const UartConfig_t * const Config);
 
-extern void Uart_SendUpdate(void);
-extern void Uart_ReceiveUpdate(void);
+extern void Uart_SendUpdate(const Uart_t Uart);
+extern void Uart_ReceiveUpdate(const Uart_t Uart);
 
 extern uint8_t Uart_SendByte(const Uart_t Uart, const uint8_t Data);
 extern uint8_t Uart_ReceiveByte(const Uart_t Uart, uint8_t* const Data);
+extern uint8_t Uart_PeekLastByte(const Uart_t Uart, uint8_t* const Data);
 
 extern uint8_t Uart_SendString(const Uart_t Uart, const uint8_t * const Data, const uint8_t DataSize);
 extern uint8_t Uart_ReceiveString(const Uart_t Uart, uint8_t * const Data, const uint8_t DataSize);
